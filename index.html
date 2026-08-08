@@ -75,6 +75,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .yp:disabled{opacity:.35;cursor:default}
 .live-strip{display:none;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:3px 10px;margin-top:9px;padding:10px 12px;border:0;border-radius:16px;background:var(--grad);box-shadow:var(--shblue);font-size:.9em;font-weight:800;color:#fff;overflow:hidden}
 .hdr.live-visible .live-strip{display:grid}
+.desktop-live-wrap{display:none}
 .desktop-live-strip{display:none}
 .live-strip .live-art{grid-column:1;grid-row:1/3;width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18))}
 .live-strip .live-now{grid-column:2/-1;justify-self:start;display:inline-flex;align-items:center;min-height:25px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.2);color:#fff;font-weight:900;line-height:1.1;white-space:nowrap}
@@ -266,7 +267,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
   /* La barra operativa appartiene al contenuto: non deve invadere la colonna del menu. */
   .hdr .live-strip{display:none!important}
   .calendar-frame{max-width:1180px;margin:0 auto}
-  .desktop-live-strip{display:grid;position:sticky;top:64px;z-index:49;margin:0 28px 10px}
+  .desktop-live-wrap{display:block;position:sticky;top:64px;z-index:49;margin:0 28px;background:var(--bg);padding-bottom:10px}
+  .desktop-live-strip{display:grid;margin:0}
   .today-card,.strip,.lgnd,.guide,.install-banner,.panel,.note27{max-width:1180px;padding-left:28px;padding-right:28px}
   .calendar-frame .cal{margin:0;padding:0 28px}
   /* Il menu inizia sotto il titolo, pur restando parte della stessa superficie dell'app. */
@@ -386,7 +388,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
     <button class="guide-x" onclick="cancelPick()">Annulla</button>
   </div></div>
   <div class="calendar-frame">
-    <div class="live-strip desktop-live-strip" id="desktop-live-strip" aria-live="polite"></div>
+    <div class="desktop-live-wrap"><div class="live-strip desktop-live-strip" id="desktop-live-strip" aria-live="polite"></div></div>
     <div class="cal" id="cal"></div>
   </div>
   <div class="lgnd">
