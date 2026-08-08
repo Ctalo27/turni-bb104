@@ -419,7 +419,7 @@ function goToday(){
     const month=document.getElementById(`mn-${y}-${m}`);
     const today=document.querySelector('.dc.today');
     if(!month||!today)return;
-    const header=document.querySelector('.hdr')?.getBoundingClientRect().bottom||0;
+    const header=calendarViewportTop();
     const monthRect=month.getBoundingClientRect();
     if(attempt===0){window.scrollTo({top:Math.max(0,window.scrollY+monthRect.top-header-8),behavior:'smooth'});setTimeout(()=>locate(1),350);return;}
     const rect=today.getBoundingClientRect(),visibleMonth=month.getBoundingClientRect();
@@ -434,9 +434,9 @@ function goToday(){
 function openAtCurrentMonth(){
   const now=liveNow(),y=now.getFullYear(),m=now.getMonth()+1;
   curYear=y;ensureRenderedYear(y);updateYearControls();updateYearNote();
-  const el=document.getElementById(`mn-${y}-${m}`),hdr=document.querySelector('.hdr');
+  const el=document.getElementById(`mn-${y}-${m}`);
   if(!el)return;
-  const headerHeight=hdr?hdr.getBoundingClientRect().height:0;
+  const headerHeight=calendarViewportTop();
   const top=window.scrollY+el.getBoundingClientRect().top-headerHeight-8;
   const root=document.documentElement,previous=root.style.scrollBehavior;
   root.style.scrollBehavior='auto';
@@ -446,6 +446,15 @@ function openAtCurrentMonth(){
 function scheduleOpenAtCurrentMonth(){
   requestAnimationFrame(()=>requestAnimationFrame(openAtCurrentMonth));
   [80,220].forEach(delay=>setTimeout(openAtCurrentMonth,delay));
+}
+function calendarViewportTop(){
+  const hdr=document.querySelector('.hdr');
+  let top=hdr?hdr.getBoundingClientRect().height:0;
+  if(window.matchMedia('(min-width:900px)').matches){
+    const live=document.getElementById('desktop-live-strip');
+    if(live)top+=live.getBoundingClientRect().height+10;
+  }
+  return top;
 }
 function applyTheme(n){
   document.documentElement.dataset.theme=n;
@@ -652,31 +661,34 @@ function renderTodayCard(){
 }
 
 function renderLiveStrip(){
-  const strip=document.getElementById('live-strip');
-  if(!strip)return;
-  if(view!=='cal'){strip.hidden=true;return;}
-  strip.hidden=false;
+  const strips=[document.getElementById('live-strip'),document.getElementById('desktop-live-strip')].filter(Boolean);
+  if(!strips.length)return;
+  if(view!=='cal'){strips.forEach(strip=>strip.hidden=true);return;}
+  strips.forEach(strip=>strip.hidden=false);
   const now=liveNow();
   const tk=liveTodayKey();
   const st=stateK(tk);
   const ongoing=findOngoing();
+  let html='';
   if(ongoing){
     const t=ongoing.shift;
-    strip.innerHTML=`<img class="live-art" src="turno-lavoro.png" alt=""><span class="live-now work">In turno</span><span class="live-next"><b>Fino alle ${esc(t.e)}</b></span><span class="live-count">${fmtCountdown(ongoing.end-now)||'presto'}</span>`;
-    return;
+    html=`<img class="live-art" src="turno-lavoro.png" alt=""><span class="live-now work">In turno</span><span class="live-next"><b>Fino alle ${esc(t.e)}</b></span><span class="live-count">${fmtCountdown(ongoing.end-now)||'presto'}</span>`;
+  }else{
+    const nxt=getNextShiftStart();
+    if(!nxt)html=`<img class="live-art" src="${st.work?'turno-lavoro.png':'turno-riposo.png'}" alt=""><span class="live-now ${st.work?'work':'rest'}">${st.work?'Oggi lavori':'Riposo oggi'}</span>`;
+    else{
+      const count=fmtCountdownDate(nxt.start)||'';
+      const tomorrow=keyOf(addDays(now,1));
+      const isNightStart=nxt.k===tomorrow&&nxt.start.getHours()<7;
+      if(!st.work&&isNightStart)html=`<img class="live-art" src="turno-riposo.png" alt=""><span class="live-now rest">Riposo oggi</span><span class="live-next"><b>Stanotte lavori</b> · ${esc(nxt.shift.s)}–${esc(nxt.shift.e)}</span><span class="live-count">${esc(count)}</span>`;
+      else{
+        const nowLabel=st.work?'Oggi lavori':'Riposo oggi';
+        const nextLabel=nxt.k===tk?'Oggi':fmt(nxt.k);
+        html=`<img class="live-art" src="${st.work?'turno-lavoro.png':'turno-riposo.png'}" alt=""><span class="live-now ${st.work?'work':'rest'}">${esc(nowLabel)}</span><span class="live-next"><b>Prossimo turno</b> · ${esc(nextLabel)} ${esc(nxt.shift.s)}–${esc(nxt.shift.e)}</span><span class="live-count">${esc(count)}</span>`;
+      }
+    }
   }
-  const nxt=getNextShiftStart();
-  if(!nxt){strip.innerHTML=`<img class="live-art" src="${st.work?'turno-lavoro.png':'turno-riposo.png'}" alt=""><span class="live-now ${st.work?'work':'rest'}">${st.work?'Oggi lavori':'Riposo oggi'}</span>`;return;}
-  const count=fmtCountdownDate(nxt.start)||'';
-  const tomorrow=keyOf(addDays(now,1));
-  const isNightStart=nxt.k===tomorrow&&nxt.start.getHours()<7;
-  if(!st.work&&isNightStart){
-    strip.innerHTML=`<img class="live-art" src="turno-riposo.png" alt=""><span class="live-now rest">Riposo oggi</span><span class="live-next"><b>Stanotte lavori</b> · ${esc(nxt.shift.s)}–${esc(nxt.shift.e)}</span><span class="live-count">${esc(count)}</span>`;
-    return;
-  }
-  const nowLabel=st.work?'Oggi lavori':'Riposo oggi';
-  const nextLabel=nxt.k===tk?'Oggi':fmt(nxt.k);
-  strip.innerHTML=`<img class="live-art" src="${st.work?'turno-lavoro.png':'turno-riposo.png'}" alt=""><span class="live-now ${st.work?'work':'rest'}">${esc(nowLabel)}</span><span class="live-next"><b>Prossimo turno</b> · ${esc(nextLabel)} ${esc(nxt.shift.s)}–${esc(nxt.shift.e)}</span><span class="live-count">${esc(count)}</span>`;
+  strips.forEach(strip=>strip.innerHTML=html);
 }
 
 function renderStrip(){
@@ -825,7 +837,7 @@ function toast(m){
 load();
 if(!CAN_STORE)document.getElementById('store-warn').style.display='block';
 
-// tema automatico per fascia oraria; la scelta manuale scade al prossimo cambio
+// ogni apertura parte in tema chiaro; il cambio manuale vale per la sessione corrente
 applyThemePreference();
 
 const nowInit=liveNow();

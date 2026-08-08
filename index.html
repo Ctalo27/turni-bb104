@@ -9,8 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Turni">
-<meta name="theme-color" id="meta-theme" content="#0a1120">
-<script>document.documentElement.dataset.theme=((new Date().getHours()>=19||new Date().getHours()<7)?'dark':'light')</script>
+<meta name="theme-color" id="meta-theme" content="#eaeef4">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -76,6 +75,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .yp:disabled{opacity:.35;cursor:default}
 .live-strip{display:none;grid-template-columns:48px minmax(0,1fr) auto;align-items:center;gap:3px 10px;margin-top:9px;padding:10px 12px;border:0;border-radius:16px;background:var(--grad);box-shadow:var(--shblue);font-size:.9em;font-weight:800;color:#fff;overflow:hidden}
 .hdr.live-visible .live-strip{display:grid}
+.desktop-live-strip{display:none}
 .live-strip .live-art{grid-column:1;grid-row:1/3;width:46px;height:46px;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.18))}
 .live-strip .live-now{grid-column:2/-1;justify-self:start;display:inline-flex;align-items:center;min-height:25px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.2);color:#fff;font-weight:900;line-height:1.1;white-space:nowrap}
 .live-strip .live-next{grid-column:2;min-width:0;overflow:visible;text-overflow:clip;white-space:normal;line-height:1.28;color:#fff}
@@ -142,7 +142,8 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .sday.today{outline:2.5px solid var(--ink);outline-offset:-1.5px}
 
 /* ── CALENDAR ── */
-.cal{max-width:740px;margin:12px auto 0;padding:0 16px}
+.calendar-frame{max-width:740px;margin:0 auto}
+.cal{max-width:none;margin:12px 0 0;padding:0 16px}
 .year-block+.year-block{margin-top:22px;padding-top:18px;border-top:1px solid var(--line2)}
 .year-title{position:sticky;top:calc(102px + env(safe-area-inset-top));z-index:10;width:max-content;margin:0 auto 10px;padding:5px 16px;border:1px solid var(--line2);border-radius:18px;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:var(--sh);font-family:'Big Shoulders Display',sans-serif;font-size:1.05em;font-weight:900;color:var(--ink)}
 .year-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
@@ -237,61 +238,12 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px soli
 .ore-c b{font-family:'Big Shoulders Display',sans-serif;font-size:1.6em;font-weight:900;color:var(--blue);display:block}
 .ore-c span{font-size:.62em;color:var(--soft);font-weight:700}
 
-/* budget */
-.bd-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)}
-.bd-row:last-child{border:none}
-.bd-name{font-size:.76em;font-weight:800}
-.bd-name small{display:block;font-size:.78em;font-weight:500;color:var(--soft)}
-.bd-right{display:flex;align-items:center;gap:8px}
-.bd-val{font-variant-numeric:tabular-nums;font-size:1.05em;font-weight:800}
-.bd-val.low{color:var(--danger)}.bd-val.ok{color:var(--swout)}
-.bd-edit{border:1px solid var(--line2);background:var(--card2);border-radius:9px;width:30px;height:30px;font-size:.72em;color:var(--soft)}
-.bd-prog{height:6px;background:var(--line);border-radius:3px;margin-top:6px;overflow:hidden}
-.bd-fill{height:100%;border-radius:3px;transition:width .5s var(--spr)}
-
 /* rest blocks */
 .rb-item{display:flex;align-items:center;gap:11px;padding:8px 0;border-bottom:1px solid var(--line)}
 .rb-item:last-child{border:none}
 .rb-days{font-family:'Big Shoulders Display',sans-serif;font-size:1.25em;font-weight:900;color:var(--swout);min-width:44px;text-align:center;background:var(--swout-bg);border-radius:9px;padding:6px 2px}
 .rb-tx{flex:1}.rb-t1{font-size:.76em;font-weight:800}.rb-t2{font-size:.58em;color:var(--soft)}
 .rb-bar{height:5px;border-radius:3px;background:var(--swout);margin-top:5px;opacity:.5}
-
-/* custom holidays */
-.ch-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:.74em}
-.ch-item:last-child{border:none}
-.ch-del{background:var(--swin-bg);color:var(--swin);border-radius:8px;padding:4px 10px;font-weight:800;font-size:.88em}
-
-/* settings */
-.set-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);gap:10px}
-.set-row:last-child{border:none}
-.set-tx{font-size:.76em;font-weight:800}
-.set-tx small{display:block;font-size:.76em;font-weight:500;color:var(--soft);margin-top:1px}
-.toggle{width:48px;height:27px;border-radius:14px;background:var(--line2);position:relative;transition:all .25s;flex-shrink:0}
-.toggle::after{content:'';position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#fff;transition:all .25s var(--spr);box-shadow:0 1px 4px rgba(0,0,0,.3)}
-.toggle.on{background:var(--blue)}.toggle.on::after{left:24px}
-.set-btn{border:1.5px solid var(--line2);background:var(--card2);border-radius:9px;padding:8px 15px;font-size:.68em;font-weight:800;white-space:nowrap;transition:transform .15s}
-.set-btn:active{transform:scale(.95)}
-.set-btn.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 35%,transparent)}
-.set-btn.primary{background:var(--grad);border-color:transparent;color:#fff;box-shadow:var(--shblue)}
-textarea.backup{width:100%;min-height:80px;margin-top:9px;background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:10px;font-family:monospace;font-size:.62em;color:var(--ink);resize:vertical}
-.bk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
-/* pattern lock */
-.pat-wrap{position:relative}
-.pat-lockover{position:absolute;inset:-4px;background:color-mix(in srgb,var(--card) 55%,transparent);backdrop-filter:blur(2px);border-radius:14px;display:flex;align-items:center;justify-content:center;z-index:5}
-.pat-lockover button{background:var(--blue);color:#fff;border-radius:12px;padding:11px 18px;font-size:.74em;font-weight:800;box-shadow:var(--sh2)}
-.pat-meta{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-.pat-f{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:8px 10px}
-.pat-f label{font-size:.52em;color:var(--soft);font-weight:800;display:block;text-transform:uppercase}
-.pat-f input{width:100%;border:none;background:none;color:var(--ink);font-weight:800;font-size:.82em;outline:none;margin-top:2px}
-.pat-head{display:grid;grid-template-columns:36px repeat(7,1fr);gap:3px;margin-bottom:4px}
-.pat-head span{text-align:center;font-size:.52em;color:var(--faint);font-weight:800}
-.pat-row{display:grid;grid-template-columns:36px repeat(7,1fr);gap:3px;align-items:center}
-.pat-wk{font-size:.54em;color:var(--soft);font-weight:800;text-align:center}
-.pat-c{aspect-ratio:1.4;border-radius:7px;background:var(--card2);border:1.5px solid var(--line);transition:all .15s}
-.pat-c.on{background:var(--blue);border-color:var(--blue)}
-.pat-btns{display:flex;gap:7px;margin-top:11px}
-.pat-btns .set-btn{flex:1;text-align:center;padding:8px 6px;font-size:.64em}
 
 /* ── NAV ── */
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:60;background:color-mix(in srgb,var(--card) 93%,transparent);backdrop-filter:blur(16px) saturate(1.4);-webkit-backdrop-filter:blur(16px) saturate(1.4);border-top:1px solid var(--line);padding:7px 10px calc(8px + env(safe-area-inset-bottom))}
@@ -312,16 +264,18 @@ textarea.backup{width:100%;min-height:80px;margin-top:9px;background:var(--card2
   .ypills{grid-column:2;grid-row:1;justify-self:end;position:static;margin:0}
   .hbtns{grid-column:3;grid-row:1;justify-self:end;margin-left:12px}
   /* La barra operativa appartiene al contenuto: non deve invadere la colonna del menu. */
-  .live-strip{grid-column:2/4}
-  .hdr-in,.today-card,.strip,.cal,.lgnd,.guide,.install-banner,.panel,.note27{max-width:1180px}
-  .today-card,.strip,.cal,.lgnd,.guide,.install-banner,.panel,.note27{padding-left:28px;padding-right:28px}
+  .hdr .live-strip{display:none!important}
+  .calendar-frame{max-width:1180px;margin:0 auto}
+  .desktop-live-strip{display:grid;position:sticky;top:64px;z-index:49;margin:0 28px 10px}
+  .today-card,.strip,.lgnd,.guide,.install-banner,.panel,.note27{max-width:1180px;padding-left:28px;padding-right:28px}
+  .calendar-frame .cal{margin:0;padding:0 28px}
   /* Il menu inizia sotto il titolo, pur restando parte della stessa superficie dell'app. */
   .bnav{top:64px;bottom:0;right:auto;width:210px;border:0;padding:16px 12px 22px;background:var(--bg);backdrop-filter:none;-webkit-backdrop-filter:none}
   .bnav-in{height:100%;max-width:none;flex-direction:column;gap:7px}
   .nbtn{flex:0 0 auto;flex-direction:row;justify-content:flex-start;gap:11px;padding:12px 13px;font-size:.76em;text-align:left}
   .nbtn .ic{width:24px;text-align:center;font-size:1.35em}
   .nbtn.on .ic{transform:scale(1.08)}
-  .year-title{top:76px}
+  .year-title{display:none}
   .year-grid{direction:rtl}
   .month{direction:ltr}
   .ore-row{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -365,6 +319,9 @@ textarea.backup{width:100%;min-height:80px;margin-top:9px;background:var(--card2
 
 /* multi-shift editor */
 .shift-row{display:flex;gap:7px;align-items:flex-end;margin-bottom:8px}
+.pat-f{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:8px 10px}
+.pat-f label{font-size:.52em;color:var(--soft);font-weight:800;display:block;text-transform:uppercase}
+.pat-f input{width:100%;border:none;background:none;color:var(--ink);font-weight:800;font-size:.82em;outline:none;margin-top:2px}
 .shift-row .pat-f{flex:1}
 .shift-row .rm-btn{background:var(--swin-bg);color:var(--swin);border-radius:10px;width:40px;height:40px;font-size:.9em;font-weight:900;flex-shrink:0}
 .add-shift-btn{border:1.5px dashed var(--line2);border-radius:12px;padding:9px;font-size:.72em;font-weight:800;color:var(--soft);width:100%;margin-bottom:8px}
@@ -428,11 +385,13 @@ textarea.backup{width:100%;min-height:80px;margin-top:9px;background:var(--card2
     <span id="guide-tx"></span>
     <button class="guide-x" onclick="cancelPick()">Annulla</button>
   </div></div>
-  <div class="cal" id="cal"></div>
+  <div class="calendar-frame">
+    <div class="live-strip desktop-live-strip" id="desktop-live-strip" aria-live="polite"></div>
+    <div class="cal" id="cal"></div>
+  </div>
   <div class="lgnd">
     <div class="lg"><div class="lgd" style="background:var(--blue)"></div>Turno</div>
     <div class="lg"><div class="lgd" style="background:color-mix(in srgb,var(--blue) 75%,#000)"></div>Orario speciale</div>
-    <div class="lg"><div class="lgd" style="background:var(--off)"></div>Ferie/ROL/Ex Fs</div>
     <div class="lg"><div class="lgd" style="background:var(--extra-bg)"></div>Turno extra</div>
     <div class="lg"><div class="lgd" style="background:var(--swout-bg)"></div>Liberato</div>
     <div class="lg"><div class="lgd" style="background:var(--hol-bg)"></div>Festività</div>
@@ -519,7 +478,6 @@ textarea.backup{width:100%;min-height:80px;margin-top:9px;background:var(--card2
 <script src="core/holidays.js"></script>
 <script src="core/store.js"></script>
 <script src="core/shifts.js"></script>
-<script src="auth/session.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

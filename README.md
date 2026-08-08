@@ -26,7 +26,6 @@ L'app non richiede un processo di compilazione né dipendenze da installare:
 - `app.js` — interfaccia e comportamenti dell'app
 - `config/` — preset dei cicli
 - `core/` — date, festività, dati e calcolo dei turni
-- `auth/session.js` — compatibilità della sessione locale, senza login
 - `sw.js` — cache offline della PWA
 
 Per provarla in locale basta servire questa cartella con un normale server HTTP statico.

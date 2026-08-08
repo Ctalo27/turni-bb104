@@ -1,6 +1,6 @@
 /* Service worker · Turni */
-const CACHE = 'turni-v26';
-const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './turno-lavoro.png', './turno-riposo.png', './config/patterns.js', './core/dates.js', './core/holidays.js', './core/store.js', './core/shifts.js', './auth/session.js', './app.js'];
+const CACHE = 'turni-v27';
+const PRECACHE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png', './turno-lavoro.png', './turno-riposo.png', './config/patterns.js', './core/dates.js', './core/holidays.js', './core/store.js', './core/shifts.js', './app.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
